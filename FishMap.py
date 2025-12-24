@@ -45,15 +45,39 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
                     except:
                         season_match = True  # If date parsing fails, show the record
                 
-                # Handle empty QTY for non-stocked species (like pike)
+                # Handle QTY and ABUNDANCE for different species types
                 qty_value = row['QTY']
-                if pd.isna(qty_value) or str(qty_value).strip() == '':
-                    qty_value = 0  # Default to 0 for empty quantities
-                else:
-                    try:
-                        qty_value = float(qty_value)
-                    except:
+                abundance_value = ''
+                qty_display = 'N/A'
+                
+                # Check if this is Arctic Char with abundance data
+                if row['SPECIES'] == 'ARCTIC CHAR' and 'ABUNDANCE' in row.index:
+                    abundance_str = str(row['ABUNDANCE']).strip()
+                    if pd.notna(row['ABUNDANCE']) and abundance_str != '' and abundance_str.lower() != 'nan':
+                        abundance_value = abundance_str
+                        # Convert qualitative abundance to numeric for filtering
+                        # High = 1000, Moderate = 500, Low = 100, Very Low = 50
+                        abundance_map = {
+                            'high': 1000,
+                            'moderate': 500,
+                            'low': 100,
+                            'very low': 50,
+                            'verylow': 50
+                        }
+                        qty_value = abundance_map.get(abundance_str.lower(), 0)
+                        qty_display = f"Abundance: {abundance_str}"
+                    else:
                         qty_value = 0
+                else:
+                    # Handle numeric QTY for stocked species
+                    if pd.isna(qty_value) or str(qty_value).strip() == '':
+                        qty_value = 0  # Default to 0 for empty quantities
+                    else:
+                        try:
+                            qty_value = float(qty_value)
+                            qty_display = qty_value if qty_value > 0 else 'N/A'
+                        except:
+                            qty_value = 0
                 
                 # Check species and quantity filters
                 if (row['SPECIES'] in selected_species and 
@@ -61,7 +85,8 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
                     season_match):
                     filtered_rows.append({
                         'species': row['SPECIES'],
-                        'qty': qty_value if qty_value > 0 else 'N/A',
+                        'qty': qty_display,
+                        'abundance': abundance_value,  # Store abundance separately
                         'size': row['SIZE (inch)'] if pd.notna(row['SIZE (inch)']) and str(row['SIZE (inch)']).strip() != '' else 'N/A',
                         'date': row['DATE'] if has_date else 'N/A (Not Stocked)'
                     })
@@ -103,12 +128,19 @@ def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
         <ul>
         """
         for row in filtered_rows:
-            # Format the popup text based on whether it's stocked or present
-            if row['date'] == 'N/A (Not Stocked)':
+            # Format the popup text based on species type
+            if row['species'] == 'ARCTIC CHAR' and row.get('abundance', ''):
+                # Show abundance for Arctic Char
+                popup_text += f"""
+            <li><b>{row['species']}</b> - Abundance: {row['abundance']} (native, not stocked)</li>
+            """
+            elif row['date'] == 'N/A (Not Stocked)':
+                # Show "Present" for other non-stocked species like pike
                 popup_text += f"""
             <li><b>{row['species']}</b> - Present (not stocked)</li>
             """
             else:
+                # Show stocking details for stocked species
                 popup_text += f"""
             <li><b>{row['species']}</b> - {row['qty']} fish, Size: {row['size']} inches, Date: {row['date']}</li>
             """
