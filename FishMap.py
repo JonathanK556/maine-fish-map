@@ -171,6 +171,7 @@ species_list = sorted(df_updated['SPECIES'].unique().tolist())
 
 # Streamlit Widgets
 st.title("Maine Coldwater Fishing")
+# Force redeploy - title updated
 
 # map_center = [44.6939, -69.3815]
 # m_test = folium.Map(location=map_center, zoom_start=6)
