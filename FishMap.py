@@ -170,7 +170,7 @@ def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
 species_list = sorted(df_updated['SPECIES'].unique().tolist())
 
 # Streamlit Widgets
-st.title("Fish Stocking Data Visualization")
+st.title("Maine Coldwater Fishing")
 
 # map_center = [44.6939, -69.3815]
 # m_test = folium.Map(location=map_center, zoom_start=6)
