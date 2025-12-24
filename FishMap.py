@@ -226,12 +226,13 @@ with st.expander("ℹ️ How to Use This Map", expanded=False):
 
     **⚠️ Disclaimer**
 
-    This app is not an official Maine Department of Inland Fisheries & Wildlife (MDIFW) application.
+    This app is **not an official Maine Department of Inland Fisheries & Wildlife (MDIFW) application**.
 
-    - Data may be delayed, incomplete, or subject to change
-    - Information shown here is for planning and reference purposes only
-    - Always verify current fishing rules, seasons, and regulations with MDIFW before fishing
-    - Regulations and official guidance always take precedence over information shown in this app.
+    - Data may be delayed, incomplete, or subject to change  
+    - Information shown here is for **planning and reference purposes only**  
+    - Always verify **current fishing rules, seasons, and regulations** with MDIFW before fishing  
+    - Regulations and official guidance always take precedence over information shown in this app  
+    - Some waters may be **closed to fishing** or have special regulations — always check before fishing
     """)
 
 # map_center = [44.6939, -69.3815]
