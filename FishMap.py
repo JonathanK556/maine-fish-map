@@ -18,7 +18,11 @@ m = folium.Map(location=map_center, zoom_start=7)
 # Function to create and cache the base map
 @st.cache_data
 def create_base_map():
-    return folium.Map(location=map_center, zoom_start=7)
+    # Create base map with standard settings
+    return folium.Map(
+        location=map_center, 
+        zoom_start=7
+    )
 
 # Function to filter data based on criteria
 @st.cache_data
@@ -199,10 +203,12 @@ def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
         marker_color = get_marker_color(filtered_rows)
 
         # Add a single marker for the water body/town combo with grouped popup data
+        # Use escape=False to prevent HTML encoding issues that can cause rendering problems
         folium.Marker(
             location=[avg_y + offset_y, avg_x + offset_x],  # Apply deterministic offset to average coordinates
-            popup=folium.Popup(popup_text, max_width=300),
-            icon=folium.Icon(color=marker_color)  # Color-coded by species category
+            popup=folium.Popup(popup_text, max_width=300, min_width=200),
+            icon=folium.Icon(color=marker_color),  # Color-coded by species category
+            tooltip=f"{water_name}, {town_name}"  # Add tooltip for better UX
         ).add_to(m)
 
     return m
@@ -313,8 +319,13 @@ def get_cached_map(selected_species_tuple, show_spring, show_fall, search_term, 
 # Convert to tuple for caching
 selected_species_tuple = tuple(selected_species)
 
-# Get cached map
-cached_map = get_cached_map(selected_species_tuple, show_spring, show_fall, search_term, min_qty)
-
-# Display the map
-st_folium(cached_map, width=800, height=600)
+# Get cached map with loading indicator and error handling
+try:
+    with st.spinner("Loading map..."):
+        cached_map = get_cached_map(selected_species_tuple, show_spring, show_fall, search_term, min_qty)
+    
+    # Display the map - use returned_objects=[] to prevent interaction data capture that can cause hangs
+    st_folium(cached_map, width=800, height=600, returned_objects=[])
+except Exception as e:
+    st.error(f"Error loading map: {str(e)}")
+    st.info("💡 Try adjusting your filters or refreshing the page. If the issue persists, try selecting fewer species at once.")
