@@ -32,22 +32,38 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
             # Filter data by species and date (Spring/Fall)
             filtered_rows = []
             for _, row in group.iterrows():
-                month = pd.to_datetime(row['DATE']).month  # Get the month from the date
+                # Handle empty DATE for non-stocked species (like pike)
+                date_str = str(row['DATE']).strip()
+                has_date = date_str != '' and date_str.lower() != 'nan'
                 
-                # Check season filter
+                # Check season filter (only applies if date exists)
                 season_match = True
-                if show_spring or show_fall:  # Only apply season filter if at least one is selected
-                    season_match = (show_spring and month <= 6) or (show_fall and month >= 7)
+                if has_date and (show_spring or show_fall):  # Only apply season filter if at least one is selected and date exists
+                    try:
+                        month = pd.to_datetime(row['DATE']).month
+                        season_match = (show_spring and month <= 6) or (show_fall and month >= 7)
+                    except:
+                        season_match = True  # If date parsing fails, show the record
+                
+                # Handle empty QTY for non-stocked species (like pike)
+                qty_value = row['QTY']
+                if pd.isna(qty_value) or str(qty_value).strip() == '':
+                    qty_value = 0  # Default to 0 for empty quantities
+                else:
+                    try:
+                        qty_value = float(qty_value)
+                    except:
+                        qty_value = 0
                 
                 # Check species and quantity filters
                 if (row['SPECIES'] in selected_species and 
-                    row['QTY'] >= min_qty and 
+                    qty_value >= min_qty and 
                     season_match):
                     filtered_rows.append({
                         'species': row['SPECIES'],
-                        'qty': row['QTY'],
-                        'size': row['SIZE (inch)'],
-                        'date': row['DATE']
+                        'qty': qty_value if qty_value > 0 else 'N/A',
+                        'size': row['SIZE (inch)'] if pd.notna(row['SIZE (inch)']) and str(row['SIZE (inch)']).strip() != '' else 'N/A',
+                        'date': row['DATE'] if has_date else 'N/A (Not Stocked)'
                     })
             
             # Only include groups that have filtered data
@@ -87,7 +103,13 @@ def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
         <ul>
         """
         for row in filtered_rows:
-            popup_text += f"""
+            # Format the popup text based on whether it's stocked or naturally occurring
+            if row['date'] == 'N/A (Not Stocked)':
+                popup_text += f"""
+            <li><b>{row['species']}</b> - Naturally occurring (not stocked)</li>
+            """
+            else:
+                popup_text += f"""
             <li><b>{row['species']}</b> - {row['qty']} fish, Size: {row['size']} inches, Date: {row['date']}</li>
             """
         popup_text += "</ul>"
