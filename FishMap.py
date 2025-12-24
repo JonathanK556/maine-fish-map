@@ -161,8 +161,8 @@ def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
 
     return m
 
-# List of unique species in your dataset
-species_list = df_updated['SPECIES'].unique()
+# List of unique species in your dataset (sorted for consistency)
+species_list = sorted(df_updated['SPECIES'].unique().tolist())
 
 # Streamlit Widgets
 st.title("Fish Stocking Data Visualization")
@@ -174,7 +174,7 @@ st.title("Fish Stocking Data Visualization")
 
 # Create checkboxes for each species
 selected_species = st.multiselect(
-    'Select Species:', species_list, default=species_list.tolist())  # Start with all species selected
+    'Select Species:', species_list, default=species_list)  # Start with all species selected
 
 # Create checkboxes for Spring and Fall Stocking
 show_spring = st.checkbox('Spring Stocking (Jan-Jun)', value=False)
