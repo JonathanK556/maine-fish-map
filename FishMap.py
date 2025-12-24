@@ -72,7 +72,8 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
                     else:
                         try:
                             qty_value = float(qty_value)
-                            qty_display = qty_value if qty_value > 0 else 'N/A'
+                            # Convert to integer for display (no half fish!)
+                            qty_display = int(qty_value) if qty_value > 0 else 'N/A'
                         except:
                             qty_value = 0
                 
@@ -86,11 +87,20 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
                 if (row['SPECIES'] in selected_species and 
                     quantity_match and 
                     season_match):
+                    # Format size as integer if it's a valid number
+                    size_display = 'N/A'
+                    if pd.notna(row['SIZE (inch)']) and str(row['SIZE (inch)']).strip() != '':
+                        try:
+                            size_value = float(row['SIZE (inch)'])
+                            size_display = int(size_value) if size_value > 0 else 'N/A'
+                        except:
+                            size_display = 'N/A'
+                    
                     filtered_rows.append({
                         'species': row['SPECIES'],
                         'qty': qty_display,
                         'abundance': abundance_value,  # Store abundance separately
-                        'size': row['SIZE (inch)'] if pd.notna(row['SIZE (inch)']) and str(row['SIZE (inch)']).strip() != '' else 'N/A',
+                        'size': size_display,
                         'date': row['DATE'] if has_date else 'N/A (Not Stocked)'
                     })
             
