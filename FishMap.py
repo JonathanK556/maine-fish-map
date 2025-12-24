@@ -171,7 +171,68 @@ species_list = sorted(df_updated['SPECIES'].unique().tolist())
 
 # Streamlit Widgets
 st.title("Maine Coldwater Fishing")
-# Force redeploy - title updated
+
+# How to Use This Map - Expandable Section
+with st.expander("ℹ️ How to Use This Map", expanded=False):
+    st.markdown("""
+    This map displays coldwater fishing information for Maine, covering 8 coldwater species including trout, salmon, char, and northern pike.
+
+    **🎣 Species Selection**
+
+    Use the species menu to select which species you want to display on the map.
+
+    You can view one species at a time or compare multiple species across waters.
+
+    **🔎 Search**
+
+    Use the search bar to quickly find and filter map results by:
+
+    - Waterbody name
+    - Town
+    - County
+
+    Search results will update the map to show only matching locations.
+
+    **📅 Stocking Filters (Stocked Species Only)**
+
+    For stocked species (trout, salmon, splake), you can filter stocking events by season:
+
+    - Spring stocking
+    - Fall stocking
+
+    These filters apply only to stocked species and do not affect species that are shown as presence-only (such as Northern Pike or Arctic Char).
+
+    **🐟 Stocking Details**
+
+    When available, stocked waters will display:
+
+    - Stocking dates
+    - Quantity stocked
+    - Fish size class
+
+    Click on a waterbody to view its most recent stocking information.
+
+    **❄️ Arctic Char Abundance**
+
+    Arctic Char locations display relative abundance levels (Low / Moderate / High) based on the most recent available information.
+
+    These values represent general population status, not catch rates.
+
+    **📍 Species Presence**
+
+    Some species, such as Northern Pike, are shown as presence only.
+
+    Presence indicates known or documented occurrence, not stocking or abundance.
+
+    **⚠️ Disclaimer**
+
+    This app is not an official Maine Department of Inland Fisheries & Wildlife (MDIFW) application.
+
+    - Data may be delayed, incomplete, or subject to change
+    - Information shown here is for planning and reference purposes only
+    - Always verify current fishing rules, seasons, and regulations with MDIFW before fishing
+    - Regulations and official guidance always take precedence over information shown in this app.
+    """)
 
 # map_center = [44.6939, -69.3815]
 # m_test = folium.Map(location=map_center, zoom_start=6)
