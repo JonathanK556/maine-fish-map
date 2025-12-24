@@ -116,6 +116,27 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
     
     return filtered_groups
 
+# Function to determine marker color based on species present
+def get_marker_color(filtered_rows):
+    """
+    Determine marker color based on species categories:
+    - Blue for Arctic Char
+    - Red for Northern Pike
+    - Green for stocked trout species (default)
+    """
+    # Check for Arctic Char (highest priority)
+    for row in filtered_rows:
+        if row['species'] == 'ARCTIC CHAR':
+            return 'blue'  # Blue for Arctic Char
+    
+    # Check for Northern Pike
+    for row in filtered_rows:
+        if row['species'] == 'NORTHERN PIKE':
+            return 'red'  # Red for Northern Pike
+    
+    # Default to green for stocked trout species
+    return 'green'  # Green for stocked trout (brook, brown, rainbow, lake trout, salmon, splake)
+
 # Function to update the map based on selected species, date filters (Spring/Fall), and search
 def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
     # Get cached base map
@@ -167,11 +188,14 @@ def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
         offset_x = random.uniform(-0.001, 0.001)  # Random offset for longitude
         offset_y = random.uniform(-0.001, 0.001)  # Random offset for latitude
 
+        # Determine marker color based on species present
+        marker_color = get_marker_color(filtered_rows)
+
         # Add a single marker for the water body/town combo with grouped popup data
         folium.Marker(
             location=[avg_y + offset_y, avg_x + offset_x],  # Apply offset to average coordinates
             popup=folium.Popup(popup_text, max_width=300),
-            icon=folium.Icon(color='green')  # Popup with the grouped stocking data
+            icon=folium.Icon(color=marker_color)  # Color-coded by species category
         ).add_to(m)
 
     return m
