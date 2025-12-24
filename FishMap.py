@@ -1,12 +1,16 @@
 #Libraries
 import pandas as pd
 import folium
-import random
+import hashlib
 import streamlit as st
 from streamlit_folium import st_folium
 
-# Load the dataframe in FishMap.py
-df_updated = pd.read_csv("df_updated.csv")
+# Load the dataframe with caching
+@st.cache_data
+def load_data():
+    return pd.read_csv("df_updated.csv")
+
+df_updated = load_data()
 
 map_center = [44.6939, -69.3815]
 m = folium.Map(location=map_center, zoom_start=7)
@@ -184,16 +188,19 @@ def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
         avg_x = group['X_coord'].mean()
         avg_y = group['Y_coord'].mean()
 
-        # Offset coordinates slightly if there are multiple towns associated with the same water body
-        offset_x = random.uniform(-0.001, 0.001)  # Random offset for longitude
-        offset_y = random.uniform(-0.001, 0.001)  # Random offset for latitude
+        # Use deterministic offset based on water/town name to prevent flickering
+        # This ensures the same location always gets the same offset
+        location_hash = hashlib.md5(f"{water_name}_{town_name}".encode()).hexdigest()
+        # Convert hash to small deterministic offset (-0.001 to 0.001)
+        offset_x = (int(location_hash[:8], 16) / 0xFFFFFFFF) * 0.002 - 0.001
+        offset_y = (int(location_hash[8:16], 16) / 0xFFFFFFFF) * 0.002 - 0.001
 
         # Determine marker color based on species present
         marker_color = get_marker_color(filtered_rows)
 
         # Add a single marker for the water body/town combo with grouped popup data
         folium.Marker(
-            location=[avg_y + offset_y, avg_x + offset_x],  # Apply offset to average coordinates
+            location=[avg_y + offset_y, avg_x + offset_x],  # Apply deterministic offset to average coordinates
             popup=folium.Popup(popup_text, max_width=300),
             icon=folium.Icon(color=marker_color)  # Color-coded by species category
         ).add_to(m)
