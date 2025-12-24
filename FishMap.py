@@ -52,14 +52,19 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
                 
                 # Check if this is Arctic Char with abundance data
                 is_arctic_char = False
-                if row['SPECIES'] == 'ARCTIC CHAR' and 'ABUNDANCE' in row.index:
-                    abundance_str = str(row['ABUNDANCE']).strip()
-                    if pd.notna(row['ABUNDANCE']) and abundance_str != '' and abundance_str.lower() != 'nan':
-                        abundance_value = abundance_str
-                        is_arctic_char = True
-                        # Leave qty_value as 0 for Arctic Char - abundance is informational only
-                        qty_value = 0
-                        qty_display = 'N/A'
+                if row['SPECIES'] == 'ARCTIC CHAR':
+                    # Check if ABUNDANCE column exists and has a value
+                    if 'ABUNDANCE' in df_updated.columns:
+                        try:
+                            abundance_str = str(row['ABUNDANCE']).strip()
+                            if pd.notna(row['ABUNDANCE']) and abundance_str != '' and abundance_str.lower() != 'nan':
+                                abundance_value = abundance_str
+                                is_arctic_char = True
+                                # Leave qty_value as 0 for Arctic Char - abundance is informational only
+                                qty_value = 0
+                                qty_display = 'N/A'
+                        except:
+                            pass  # If ABUNDANCE doesn't exist for this row, treat as regular
                 else:
                     # Handle numeric QTY for stocked species
                     if pd.isna(qty_value) or str(qty_value).strip() == '':
