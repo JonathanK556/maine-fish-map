@@ -51,23 +51,15 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
                 qty_display = 'N/A'
                 
                 # Check if this is Arctic Char with abundance data
+                is_arctic_char = False
                 if row['SPECIES'] == 'ARCTIC CHAR' and 'ABUNDANCE' in row.index:
                     abundance_str = str(row['ABUNDANCE']).strip()
                     if pd.notna(row['ABUNDANCE']) and abundance_str != '' and abundance_str.lower() != 'nan':
                         abundance_value = abundance_str
-                        # Convert qualitative abundance to numeric for filtering
-                        # High = 1000, Moderate = 500, Low = 100, Very Low = 50
-                        abundance_map = {
-                            'high': 1000,
-                            'moderate': 500,
-                            'low': 100,
-                            'very low': 50,
-                            'verylow': 50
-                        }
-                        qty_value = abundance_map.get(abundance_str.lower(), 0)
-                        qty_display = f"Abundance: {abundance_str}"
-                    else:
+                        is_arctic_char = True
+                        # Leave qty_value as 0 for Arctic Char - abundance is informational only
                         qty_value = 0
+                        qty_display = 'N/A'
                 else:
                     # Handle numeric QTY for stocked species
                     if pd.isna(qty_value) or str(qty_value).strip() == '':
@@ -80,8 +72,14 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
                             qty_value = 0
                 
                 # Check species and quantity filters
+                # For Arctic Char, always show regardless of min_qty (qty_value is 0)
+                # For other species, apply the min_qty filter
+                quantity_match = True
+                if not is_arctic_char:
+                    quantity_match = qty_value >= min_qty
+                
                 if (row['SPECIES'] in selected_species and 
-                    qty_value >= min_qty and 
+                    quantity_match and 
                     season_match):
                     filtered_rows.append({
                         'species': row['SPECIES'],
