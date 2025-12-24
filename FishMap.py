@@ -103,10 +103,10 @@ def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
         <ul>
         """
         for row in filtered_rows:
-            # Format the popup text based on whether it's stocked or naturally occurring
+            # Format the popup text based on whether it's stocked or present
             if row['date'] == 'N/A (Not Stocked)':
                 popup_text += f"""
-            <li><b>{row['species']}</b> - Naturally occurring (not stocked)</li>
+            <li><b>{row['species']}</b> - Present (not stocked)</li>
             """
             else:
                 popup_text += f"""
