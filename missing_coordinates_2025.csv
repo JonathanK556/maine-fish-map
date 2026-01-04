@@ -1,14 +1,14 @@
 WATER,TOWN,COUNTY,X_coord,Y_coord
-MUSQUACOOK L (2ND),T11 R11 WELS,Aroostook,,
-UMSASKIS L,T11 R13 WELS,Aroostook,,
-NICATOUS STREAM,T3 ND,Hancock,,
-BASIN P,Fayette,Kennebec,,
-DENNIS B,Litchfield,Kennebec,,
-POTTERS B,Litchfield,Kennebec,,
-FRESH P,North Haven,Knox,,
-BANGOR MUNICIPAL GOLF COURSE P,Bangor,Penobscot,,
-MOORE P,Bradstreet Twp,Somerset,,
-KNIGHTS P,Squaretown Twp,Somerset,,
-BIG L,Grand Lake Stream Plt,Washington,,
-BOYDEN L,Perry,Washington,,
-SPECTACLE L (UPPER),T19 ED BPP,Washington,,
+MUSQUACOOK L (2ND),T11 R11 WELS,Aroostook,-69.178441,46.634721
+UMSASKIS L,T11 R13 WELS,Aroostook,-69.385476,46.596243
+NICATOUS STREAM,T3 ND,Hancock,-68.259049,45.209818
+BASIN P,Fayette,Kennebec,-70.052410,44.457782
+DENNIS B,Litchfield,Kennebec,-69.933044,44.188421
+POTTERS B,Litchfield,Kennebec,-69.913042,44.153416
+FRESH P,North Haven,Knox,-68.852875,44.158373
+BANGOR MUNICIPAL GOLF COURSE P,Bangor,Penobscot,-68.788492,44.789260
+MOORE P,Bradstreet Twp,Somerset,-70.254334,45.489827
+KNIGHTS P,Squaretown Twp,Somerset,-69.864300,45.409816
+BIG L,Grand Lake Stream Plt,Washington,-67.682477,45.170285
+BOYDEN L,Perry,Washington,-67.154210,45.014211
+SPECTACLE L (UPPER),T19 ED BPP,Washington,-67.479196,44.958519
