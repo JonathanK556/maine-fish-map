@@ -74,28 +74,7 @@ The `FishMap_2024.html` file can be deployed to any web hosting service:
 
 3. **Other hosting services:** Upload the HTML file to any web hosting provider
 
-### Option 4: Docker Deployment (Production Ready!)
-
-**Complete Docker setup is included!** See `DOCKER_DEPLOYMENT.md` for full instructions.
-
-**Quick start:**
-```bash
-# Using Docker Compose (Recommended)
-docker-compose up -d
-
-# Or using Docker directly
-docker build -t fish-stocking-map .
-docker run -p 8501:8501 fish-stocking-map
-```
-
-**Features:**
-- ✅ Production-ready configuration
-- ✅ Nginx reverse proxy
-- ✅ Health checks
-- ✅ Security optimizations
-- ✅ Cloud deployment ready
-
-### Option 5: Jupyter Notebook with Binder
+### Option 4: Jupyter Notebook with Binder
 
 1. **Create a `binder` directory with `postBuild` file:**
    ```bash
