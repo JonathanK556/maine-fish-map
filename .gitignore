@@ -83,6 +83,10 @@ credentials.json
 *.bak
 *.backup
 
+# Excel temporary files
+~$*.xlsx
+~$*.xls
+
 # Data files (optional - uncomment if you don't want to share data)
 # *.csv
 # *.xlsx
