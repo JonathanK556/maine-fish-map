@@ -124,26 +124,12 @@ def filter_data(selected_species, show_spring, show_fall, search_term, min_qty):
     
     return filtered_groups
 
-# Function to determine marker color based on species present
+# Function to determine marker color - all markers are green
 def get_marker_color(filtered_rows):
     """
-    Determine marker color based on species categories:
-    - Blue for Arctic Char
-    - Red for Northern Pike
-    - Green for stocked trout species (default)
+    All markers are green.
     """
-    # Check for Arctic Char (highest priority)
-    for row in filtered_rows:
-        if row['species'] == 'ARCTIC CHAR':
-            return 'blue'  # Blue for Arctic Char
-    
-    # Check for Northern Pike
-    for row in filtered_rows:
-        if row['species'] == 'NORTHERN PIKE':
-            return 'red'  # Red for Northern Pike
-    
-    # Default to green for stocked trout species
-    return 'green'  # Green for stocked trout (brook, brown, rainbow, lake trout, salmon, splake)
+    return 'green'
 
 # Function to update the map based on selected species, date filters (Spring/Fall), and search
 def update_map(selected_species, show_spring, show_fall, search_term, min_qty):
